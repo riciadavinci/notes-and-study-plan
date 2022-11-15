@@ -1,0 +1,14 @@
+
+@startuml
+
+"Hackerrank" -->[able to solve] "Codechef"
+
+"Hackerrank" -->[unable to solve] "Hackerrank/gfg"
+
+"Codechef" -->[yes] "Codeforces"
+
+"Codechef" -->[no] "Leetcode"
+
+"Hackerrank/gfg" -->[yes] "Leetcode"
+
+@enduml
