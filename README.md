@@ -20,5 +20,12 @@ _MLSim Engg_ stands for Machine Learning and Simulation Engineer. It is my ideal
 1. DL & ML: TensorFlow, Keras, Scikit-learn, Numpy, Pandas, Matplotlib, OpenCV
 2. Parallel Computing: MPI, OpenMP, CUDA C++, Python (multi-threading, multi-processing, asyncio)
 3. Testing: Pytest, Google Test
+4. Tools: CMake, Makefiles
 
 
+#### Topics:
+1. [Parallel Programming](parallel_programming/)
+2. []()
+3. []()
+4. []()
+5. []()
