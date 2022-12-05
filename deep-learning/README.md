@@ -12,7 +12,7 @@
 6. Reinforcement Learning - deeplizard - [videos](https://www.youtube.com/playlist?list=PLZbbT5o_s2xoWNVdDudn51XM8lOuZ_Njv)
 7. Reinforcement Learning - FAU
 8. Computer Vision:
-    - OpenCV Python Course - Learn Computer Vision and AI - [video]](https://www.youtube.com/watch?v=P4Z8_qe2Cu0)
+    - OpenCV Python Course - Learn Computer Vision and AI - [video](https://www.youtube.com/watch?v=P4Z8_qe2Cu0)
 	- OpenCV Course - Full Tutorial with Python -[video](https://www.youtube.com/watch?v=oXlwWbU8l2o)
-	- Advanced Computer Vision with Python - Full Course - [video]](https://www.youtube.com/watch?v=01sAkU_NvOY)
+	- Advanced Computer Vision with Python - Full Course - [video](https://www.youtube.com/watch?v=01sAkU_NvOY)
 
