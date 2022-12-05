@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="228px" preserveAspectRatio="none" style="width:219px;height:228px;background:#FFFFFF;" version="1.1" viewBox="0 0 219 228" width="219px" zoomAndPan="magnify"><defs/><g><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="83" x="61.5" y="7"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="63" x="71.5" y="29.457">Hackerrank</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="73" x="12.5" y="97"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="53" x="22.5" y="119.457">Codechef</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="103" x="105.5" y="97"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="83" x="115.5" y="119.457">Hackerrank/gfg</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="84" x="7" y="187"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="64" x="17" y="209.457">Codeforces</text><rect fill="#F1F1F1" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="71" x="116.5" y="187"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="51" x="126.5" y="209.457">Leetcode</text><!--MD5=[c7d862adc1c0a9829d11f5dc00fb050d]
+link Hackerrank to Codechef--><g id="link_Hackerrank_Codechef"><path d="M80.99,42.3 C74.76,47.97 68.47,54.73 64,62 C58.49,70.97 54.92,82.06 52.65,91.65 " fill="none" id="Hackerrank-to-Codechef" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="51.52,96.8,57.355,88.8657,52.591,91.9161,49.5407,87.1521,51.52,96.8" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="61" x="65" y="74.4189">able to solve</text></g><!--MD5=[150583b8724b5ab00c6f70dea6ac2068]
+link Hackerrank to Hackerrank/gfg--><g id="link_Hackerrank_Hackerrank/gfg"><path d="M114.76,42.01 C119.05,48.2 123.86,55.35 128,62 C134.06,71.73 140.35,82.78 145.52,92.14 " fill="none" id="Hackerrank-to-Hackerrank/gfg" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="147.96,96.58,147.1485,86.7646,145.5597,92.1938,140.1306,90.6051,147.96,96.58" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="73" x="138" y="74.4189">unable to solve</text></g><!--MD5=[390c1e2ddd9a7ad2bd6478828a49e55d]
+link Codechef to Codeforces--><g id="link_Codechef_Codeforces"><path d="M49,132.05 C49,146.1 49,166.36 49,181.72 " fill="none" id="Codechef-to-Codeforces" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="49,186.72,53,177.72,49,181.72,45,177.72,49,186.72" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="18" x="50" y="164.4189">yes</text></g><!--MD5=[8140a16297d8315443c21fa0c5ab0a09]
+link Codechef to Leetcode--><g id="link_Codechef_Leetcode"><path d="M68.37,132.05 C85.39,146.59 110.18,167.77 128.36,183.3 " fill="none" id="Codechef-to-Leetcode" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="132.36,186.72,128.1134,177.8337,128.5577,183.4731,122.9183,183.9174,132.36,186.72" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="12" x="108" y="164.4189">no</text></g><!--MD5=[68ca0909b3a7c0c5465ea2df7f771e53]
+link Hackerrank/gfg to Leetcode--><g id="link_Hackerrank/gfg_Leetcode"><path d="M156.06,132.05 C155.26,146.1 154.11,166.36 153.24,181.72 " fill="none" id="Hackerrank/gfg-to-Leetcode" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="152.95,186.72,157.4584,177.9636,153.2361,181.7282,149.4715,177.5059,152.95,186.72" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="18" x="155" y="164.4189">yes</text></g><!--MD5=[6d8b79d8f23b0be8e5be07027d7ebf2b]
+@startuml
+
+"Hackerrank" - ->[able to solve] "Codechef"
+
+"Hackerrank" - ->[unable to solve] "Hackerrank/gfg"
+
+"Codechef" - ->[yes] "Codeforces"
+
+"Codechef" - ->[no] "Leetcode"
+
+"Hackerrank/gfg" - ->[yes] "Leetcode"
+
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: IN
+--></g></svg>

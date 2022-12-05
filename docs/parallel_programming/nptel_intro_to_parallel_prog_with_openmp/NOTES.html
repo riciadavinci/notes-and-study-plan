@@ -1,0 +1,181 @@
+<h2>Title: Introduction to Parallel Programming in OpenMP</h2>
+<p><strong>Link: <a href="https://www.youtube.com/playlist?list=PLJ5C_6qdAvBFMAko9JTyDJDIt1W48Sxmg">https://www.youtube.com/playlist?list=PLJ5C_6qdAvBFMAko9JTyDJDIt1W48Sxmg</a></strong></p>
+<hr />
+<h3>1.1 Introduction to Parallel Programming:</h3>
+<h4>1.1.1 Serial Computing:</h4>
+<ul>
+<li>Problem is broken into stream of instructions</li>
+<li>each of these instructions are executed sequentially one after the the other on a single processor (&amp;/or core)</li>
+<li>One instruction executes at a time</li>
+</ul>
+<h4>1.1.2 Parallel Computing:</h4>
+<ul>
+<li>Problem is broken into parts that can be solved concurrently</li>
+<li>Each part is further broken down into a stream of instructions</li>
+<li>Instructions from each of these different parts executes simultaneously on different processors (&amp;/or cores)</li>
+</ul>
+<h4>1.1.3 Why need for parallel computing:</h4>
+<ul>
+<li>Divide compute work and save time</li>
+<li>Large scale simulations and ML workloads require large amount of memory, too impractical for single computer. Hence, use multi-node parallel computer which divides problem into managable chunks</li>
+<li>Processors are not getting faster (Freq. has hit peak) due to heat dissipation and power consumption issues</li>
+</ul>
+<p><br></p>
+<h3>1.2 Parallel Architectures &amp; Programming Models:</h3>
+<p>| Memory Models | Parallel Architectures | Programming Models |
+| --- | --- | --- |
+| <strong>Shared Memory</strong> <br><br> (Popular framework - <strong>OpenMP</strong>) | A single <strong>memory</strong> unit is <strong>shared by all processors</strong> (i.e. all processors have access to this shared memory). Typically a common <strong>BUS sits</strong> between the memory and the processing units. An <strong>Arbiter</strong>[^1] figures out which CPU gets access to the memory.<br> Shared memory systems have a limit on number of processors/cores that can access the same memory via the BUS. Thus, here the BUS becomes the bottleneck. | This assumes that there is a huge <strong>global address space</strong> (in the memory) that is accessible/visible to all the tasks. It is known as <strong>Shared Memory Programming Model</strong>. |
+| <strong>Distributed Memory</strong> <br><br> (Popular framework - <strong>MPI</strong>) | Every CPU has its <strong>own memory unit</strong>. Thus, a CPU and its own memory form a node. They need to be synced up when solving a divided problem. They talk to each other via a Network.<br> The problem of upper limit of number of CPUs/Cores is solved in that the number is bounded by the number of nodes. The bottleneck shifts to the network. | Here we have <strong>Message Passing Programming Model</strong>, where each task has its own address space (private). If one task wants to get data from another task, it has to explicitly do message passing over the network. Two important keywords associated with this type of programming model are <strong>send</strong> and <strong>receive (recv)</strong>. |
+| <strong>Hybrid</strong> <br><br> (Popular framework combo - <strong>OpenMP</strong> + <strong>MPI</strong>) | In reality, the hybrid approach is generally favoured. It has several nodes, and each node has multiple CPUs. It could also be a CPU and a GPU. | A combination of message passing and shared memory is used. Typically you have different processes running on different nodes of the distributed memory architecture and within each node we use shared memory model for multiple cores. |</p>
+<p><em><u>Note</u>: It is possible to have a shared memory architecture that works on top of message passing programming model and also to have a message passing architecture that works on top of shared memory programming model. <br> Take the case of message passing build on top shared memory architecture - a process has its own address space and other process cannot see this address space unless you do explicit message calls. <br> Similarly, you can do a shared memory programming with distributed memory architecture - The distributed memory will have an image of a global memory (snapshot of all distributed memories combined), but accessing data from a local process becomes the responsibility of the OS (since the memory sharing has to be implicit by default). The programmer does not need to worry about this explicitly, although data fetching rates will vary greatly.</em></p>
+<p><em><u>Note</u>: GPUs also adhere to shared memory architecture and programming model. many GPUs at many nodes can be combined via message passing to get a even greater performance. Nvidia GPUs use CUDA framework (built on top of C &amp; C++).</em></p>
+<p><br></p>
+<h3>1.3 Pipelining:</h3>
+<h4>1.3.1 Single Processor Architecture</h4>
+<ul>
+<li>A simple single processor setup consists of the Processor itself, a memory unit, and the data path between them. Any of those could be the bottlenecks depending upon the algorithm to be implemented.</li>
+<li>Modern-day processors have a feature to improve performance called <strong>Pipelining</strong> - take an example of some simple instruction in <em>"ASM"</em> being executed on the processor - <code>ADD R1, 10</code> (add <code>10</code> to contents of register <code>R1</code>). It happens as follows:<ul>
+<li>Each instruction is broken down into stages</li>
+<li>The processor might possibly execute one stage in one <strong>cycle</strong> [^2]. For a 1 GHz processor, <code>1 cycle = 1 ns</code></li>
+<li>Let's say the add operation takes <code>15 ns</code></li>
+<li>Now the <code>ADD</code> instruction maybe divided into the following stages (as an example):<ol>
+<li><u>Instruction Fetch (IF)</u>: getting the add instruction from the instruction cache</li>
+<li><u>Decode (D)</u>: decode the fetched instruction - determine which action is to be performed</li>
+<li><u>Operand Fetch (OF)</u>: basically fetch the <em>"operands / data"</em> from main memory / data cache</li>
+<li><u>Execute (E)</u>: execute the actual add opeartion</li>
+<li><u>Write Back (WB)</u>: write back the result of the operation into main memory</li>
+</ol>
+</li>
+<li>The above is an example of a 5-stage pipeline (Modern processors typically have 20 or more pipeline stages)</li>
+<li>According to the 5-stage pipeline and execution time of 1 cycle per instruction stage, the <code>ADD R1, 10</code> instruction will be executed as:<ol>
+<li>In 1st cycle, the instructions will be fetched</li>
+<li>In 2nd cycle, the instructions will be decoded</li>
+<li>Since <code>10</code> is a constant and <code>R1</code> is jsut the register, there is no need for operand fetch (<code>OF</code> / memory fetch operation) here.</li>
+<li>The execution operation can be directly performed in the 3rd cycle here</li>
+<li>Since the answer is written back into <code>R1</code>, no need for a <code>WR</code> operation as well, so the entire instruction is done in 3 cycles</li>
+</ol>
+</li>
+<li>There is different hardware that handles each of the instruction stages - for Instruction Fetch the hardware is different, for Decode the hardware is different and so on.</li>
+<li>Let's say that we want to perform two operations now: <code>ADD R1, 10</code> and <code>ADD R2, 5</code>. Pipelining would look as follows:<ul>
+<li>In the 1st cycle, <code>IF</code> will be performed for <code>ADD R1, 10</code> (using special hardware).</li>
+<li>In the 2nd cycle, <code>ADD R1, 10</code> will be in decode stage and the <code>IF</code> hardware will be in idle.</li>
+<li>Thus, in the 2nd cycle, the IF hardware can perform the fetch operation for <code>ADD R2, 5</code> operation.</li>
+<li>Thus in the 3rd cycle, <code>ADD R1, 10</code> will be executed and <code>ADD R2, 5</code> will be decoded.</li>
+<li>And in the 4th cycle, <code>ADD R2, 5</code> will be executed.</li>
+</ul>
+</li>
+<li>In this way, we don't have to wait 3 cycles for <code>ADD R1, 10</code> to finish completely (total time here would be 6 cyucles). We can utilize the idle hardware to optimize resource utilization and speed up our code</li>
+</ul>
+</li>
+<li><strong>Separate hardware</strong> is required for each stage of the instruction while pipelining
+<img alt="Pipelining Diagram" src="img/pipelining.png" /></li>
+</ul>
+<p><br></p>
+<h3>1.4 Superpipelining and VLIW</h3>
+<ul>
+<li>
+<p>For example, let's say that we want to perform the following 3 operations/commands: <code>ADD R1, 10</code>, <code>ADD R2, 5</code>,  and <code>SUB R3, 6</code>. If the processor figures out that these instructions are independent of each other, then it  can execute them in parallel as follows: <img alt="Super-pipelining Diagram" src="img/super_pipelining.png" /></p>
+</li>
+<li>
+<p>This is called <strong>Superpipelining</strong>.</p>
+</li>
+<li>
+<p>But this requires multiple logical units (multiple hardware for each of the stages) - since you will be fetching more than 1 instruction at at time, decoding more than 1 instruction at a time, etc.</p>
+</li>
+<li>
+<p>What if 2 of these operations were not independent (ex: <code>ADD R1, 10</code> and <code>ADD R1, 5</code>), in theory these could still be parallelized (superpipelined) as follows: <img alt="Super-pipelining NOP Diagram" src="img/super_pipelining_nop.png" /></p>
+</li>
+<li>
+<p>As we can see, the instruction fetch (<code>IF</code>), decode (<code>D</code>), and operand fetch (<code>OF</code>) can be done in parallel. But when <code>ADD R1, 10</code> is being executed, <code>ADD R1, 5</code> undergoes <code>NOP</code> (read as <strong>no-op</strong> or no operation instruction/cycle). Once <code>R1</code> is free, then <code>5</code> is added to <code>R1</code> in the next cycle.</p>
+</li>
+<li>
+<p>This kind of architecture is useful for linear algebra operations - operations like scaling a vector, or computing dot product of two vectors, etc can. be performed in parallel. (Here, operation is performed on completely independent datasets)</p>
+</li>
+</ul>
+<p><br></p>
+<h4>1.4.1 Issues with Pipelining and Superpipelining:</h4>
+<ol>
+<li>
+<p><strong>Data Dependency:</strong> <code>ADD R1, 10</code> and <code>ADD R1, 5</code> are not data independent operations and hence it is not possible to make them 100% Superpipelined. A <code>NOP</code> cycle is necessary.</p>
+</li>
+<li>
+<p><strong>Branching:</strong> Let's say that we put in 2 instructions at a time in parallel (in a superpipeline). From the diagram below, let's say one of the instructions (marked in red) has conditional branching. Until decoding of this instruction, instructions are let in two at a time in the superpipeline (instructions in blue and green). Once that <em>branching</em> instruction is decoded, we get to know that we have to jump to some other the code. Thus, the insturctions already loaded into the pipeline (blue and green) have to be scrapped. This leads to wasted work. <img alt="Super-pipelining NOP Diagram" src="img/branching.png" /></p>
+</li>
+<li>
+<p><strong>Memory Latency:</strong> This issue goes beyond pipelining (it's a general issue). Modern processors operate at 2-4GHz. In comparison, fetching from memory (RAM) takes hundreds of cycles, while the instrution can be executed in about 4-5 cycles (4-5 ns). Thus, there is a huge gap between the performance of the processor and the time it takes to get data from the memory. Ex: let's say that we want to add some data located in main memory (say at address <code>@1000</code>) to a register (say <code>R1</code>) - <code>ADD R1, @1000</code>. The 2nd instruction is to add a constant to <code>R1</code> - <code>ADD R1, 3</code>. As seen from the figure: <img alt="Memory latency issue" src="img/memory_latency_issue.png" />
+Thus, <code>ADD R1, 3</code> will have to wait for <code>ADD R1, @1000</code> to finish operand fetch (from main memory) and execution, before it can resume. Thus, it is a waste of pipelining.</p>
+</li>
+</ol>
+<h4>1.4.2 In-order execution:</h4>
+<ul>
+<li>In inorder execution, the processor simply picks up the next instruction (from the code) and puts it into the pipeline for execution. While issuing it checks whether the instruction can be issued simultaneously or not. </li>
+</ul>
+<h4>1.4.3 Out-of-order execution:</h4>
+<ul>
+<li>Let's say that you want to issue the following 3 commands: <code>ADD R1, 52</code>, <code>ADD R1, 6</code>, and <code>ADD R2, 8</code>. Modern processors have a window before putting the code in pipeline, where they examine the code. It will try to figure out if the next piece of code can be executed in parallel with current code. In case of our example, the 1st 2 commands are data dependent and therefore cannot be executed in parallel. However, the 3rd can be. Therefore, the processor will put <code>ADD R1, 52</code> and <code>ADD R2, 8</code> in parallel in the pipeline for execution (eventhough <code>ADD R1, 6</code> is the 2nd command). But, in the end it has to make sure that <code>ADD R1, 6</code> is completed before <code>ADD R2, 8</code>. Thus, out-of-order execution can be tricky.</li>
+</ul>
+<h4>1.4.4 VLIW (Very Long Instruction Words):</h4>
+<ul>
+<li>Another way to deal with this issue of execution is to use VLIW. Instead of using the processor to determine whether the commands can be executed as a set of parallel instructions at runtime (this requires complex hardware and also the previous problems), the work can be offloaded to the compiler. Thus, while compilation of your code, the compiler decides in advance which instuctions are to be executed in parallel and then clubs them together. This is the idea behind the VLIW architecture.</li>
+</ul>
+<p>| Superpipelining | VLIW |
+| --- | --- |
+| This is done dynamically (at runtime). | This is done statically (at compile time). |
+| This needs complex hardware. | The hardware circuit can be much simpler. |
+| Since this is done in realtime, the proessor has a very small window to decide on which instructions to club together in parallel and hence it cannot get the most parallel performance. | It is done offline (at compile time), thus the processor has enough time to try out large number of permutations and combinations to get optimal parallelized code. This may take a large compile time, but it pays off with faster exeution. | 
+| Superpipelining can take advantage of dynamic state and make decisions about order of execution better than VLIW. | The major drawback is that it does not have a view of the dynamic state - what is currently going on. Eg. if an operand fetch takes long time, VLIW cannot choose another independent instruction to execute in parallel to avoid wasting time. |
+| In case of branching (like loops), the superpipeline has access to branch history table and if it predicts that an instruction is going to be executed n number of times through the loop, it will just fetch the instruction from this branch history table. | Again, the VLIW cannot take advantage of dynamic state features like branch history table, and hence it will fetch the instructions again from the memory instead of from the cached table, thus wasting precious time. |</p>
+<p><br></p>
+<h3>1.5 Memory Latency</h3>
+<ul>
+<li>The main purpose of Memory (RAM) is - we supply an address / memory location and it returns us the data present at that location. This data is typically of some size (typically referred to as <strong>word size</strong>).</li>
+<li>One important factor that determines the performance of the memory is <strong>latency</strong> - it is the time taken from requesting data (<code>OF</code>) from a particular memory location and receiving that data. It is denoted by <code>l</code>.</li>
+<li>The performance of a computer system depends on its ability to feed data to the processor.</li>
+<li>Consider an example of matrix multiplication: <code>C = A x B</code>. Each matrix is of the size <code>64 x 64</code> and each element has size <code>4 bytes</code>.
+The simplest code would be:
+    <code>C++
+    // Initialize C to zero
+    for (i = 0; i &lt; n; ++i)
+      for (j = 0; j &lt; n; ++j)
+        for (k = 0; k &lt; n; ++k)
+          C[i][j] += A[i][k] * B[k][j];</code></li>
+<li>Assuming a few things:<ul>
+<li>Processor clock speed: 1 GHz</li>
+<li>Cost of memory access: 100cycles / 100 ns</li>
+<li>Word size (b): 4 bytes</li>
+<li>In-order issue &amp; no superpipelining</li>
+</ul>
+</li>
+<li>Instructions:
+    <code>nasm
+    load R1, [R2]       // store the address of A[i][k] in R2
+                        // and then load location specified by R2 in R1
+    load R3, [R4]       // load B[k][j] location in R4 and then data in R4 to R3
+    madd R5, R1, R3     // multiply and add: C[i][k] += A[i][k] * B[k][J]</code></li>
+<li>Taking a look at the performance of the above code:<ul>
+<li>Both the <code>load</code> instructions will take <code>100 ns</code> each (so total of <code>200 ns</code>)</li>
+<li>A few nano seconds for <code>madd</code> (say <code>5 ns</code>)</li>
+<li>Thus, it comes down to <code>105 ns</code></li>
+<li>In comparison to <code>load</code> and <code>madd</code>, incrementing <code>i</code>, <code>j</code>, and <code>k</code> is insignificant, so we ignore it (for simplicity)</li>
+<li>The performance is gauged by <strong>FLOPS</strong> (Floating Point Operations Per Second)</li>
+<li>There are 2 operations being performed in every iteration of <code>k</code>: <code>multiply</code> and <code>add</code> (eventhough it is a single instruction here at <code>ASM</code> level). Thus, <code>##OPS = 2</code></li>
+<li><code>Time ≈ 200 ns</code></li>
+<li><code>FLOPS = 2 OPS / 200 ns = 2 * 10E9 / 200 = 10 MFLOPS</code></li>
+<li>The processor has speed of <code>1 GHz</code>, so in theory we should be able to perform <code>10E9 OPS</code>, but in reality, the maximum is <code>10 MFLOPS = 10 * 10E6 OPS = 10E7 OPS</code>.</li>
+<li>Thus, performance is a <strong>decrease by 100 times</strong>. This is the issue of Memory Latency.</li>
+</ul>
+</li>
+</ul>
+<h3>1.6 Cache and Temporal Locality</h3>
+<ul>
+<li>To address the issue of Memory Latency, we make use of <strong>Cache</strong>. It is essentially a smaller but faster memory, that sits between the processor and the main memory. Cache memory is very costly.[3][Cache]</li>
+</ul>
+<h3>RESUME: <a href="https://www.youtube.com/watch?v=LkDgKBHjwz8&amp;list=PLJ5C_6qdAvBFMAko9JTyDJDIt1W48Sxmg&amp;index=6">https://www.youtube.com/watch?v=LkDgKBHjwz8&amp;list=PLJ5C_6qdAvBFMAko9JTyDJDIt1W48Sxmg&amp;index=6</a></h3>
+<h3>1.7 Cache, Memory bandwidth and Spatial Locality</h3>
+<h3>1.8 Intution for Shared and Distributed Memory architectures</h3>
+<h3>1.9 Shared and Distributed Memory architectures</h3>
+<h3>1.10 Interconnection networks in Distributed Memory architecture</h3>
+<p><a href="https://archive.nptel.ac.in/courses/106/102/106102163/">Main reference</a></p>
+<p>[^1]: <strong>Arbiter:</strong> Arbiters are electronic devices that allocate access to shared resources. A bus arbiter is a device used in a multi-master bus system to decide which bus master will be allowed to control the bus for each bus cycle. The most common kind of bus arbiter is the memory arbiter in a system bus system. A memory arbiter is a device used in a shared memory system to decide, for each memory cycle, which CPU will be allowed to access that shared memory.<a href="https://en.wikipedia.org/wiki/Arbiter_(electronics)">1</a> <br></p>
+<p>[^2]: <strong>Cycle:</strong> Let's consider a processor having 1GHz as clock frequency - this means that: <br> <div style="text-align: center;"> <em><strong>1 time period = 1 cycle = (clock frequency)<sup>-1</sup> = 10 <sup>-9</sup> s = 1 ns</strong></em> </div>
+This means that for a 1 GHz processor, 1 cycle is executed in 1 ns. <br></p>
