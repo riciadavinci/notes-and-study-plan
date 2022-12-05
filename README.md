@@ -1,8 +1,13 @@
-### Notes and Study Plan for MLSim Engg profile
+### Notes and Study Plan for Machine Learning and/or Simulation Engineer Profile
 
-_MLSim Engg_ stands for Machine Learning and Simulation Engineer. It is my ideal job profile, where I work to develop software for machine learning and simulations.
+_It is my desired job profile, where I want to work on developing software for machine learning and/or simulations._
 
-### Knowledge Goals:
+#### Topics:
+1. [Parallel Programming](parallel-programming/)
+2. [Deep Learning](deep-learning/)
+3. [Data Structures and Algorithms](dsa/)
+4. [Software Engineering](swe/)
+5. Study Plans
 
 #### Software Languages:
 1. C++
@@ -13,19 +18,12 @@ _MLSim Engg_ stands for Machine Learning and Simulation Engineer. It is my ideal
 1. Numerics, Numerical Methods, and Scientific Programming
 2. Deep Learning
 3. Parallel Programming
-4. Software Development (Building, Software Architecture, Software Unit-Testing)
+4. Software Development (Build Systems, Software Architecture, Software Testing)
 5. Data Structures and Algorithms
 
 #### Frameworks and Libraries:
 1. DL & ML: TensorFlow, Keras, Scikit-learn, Numpy, Pandas, Matplotlib, OpenCV
 2. Parallel Computing: MPI, OpenMP, CUDA C++, Python (multi-threading, multi-processing, asyncio)
 3. Testing: Pytest, Google Test
-4. Tools: CMake, Makefiles
-
-
-#### Topics:
-1. [Parallel Programming](parallel_programming/)
-2. []()
-3. []()
-4. []()
-5. []()
+4. Build Tools: CMake, Makefiles
+5. Other Tools: Shell Scripting (bash/tcsh)
