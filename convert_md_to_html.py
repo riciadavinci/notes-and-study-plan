@@ -27,8 +27,8 @@ def find_md_files(startpath):
 
 def mk_outfilepath(BASEPATH, filepath):
     updated_basepath = os.path.join(BASEPATH, "docs")
-    updated_basename, _ = os.path.splitext(os.path.join(updated_basepath, filepath.replace(BASEPATH, "")[1:]))
-    outfilepath = updated_basename + ".html"
+    updated_basename, _ = os.path.split(os.path.join(updated_basepath, filepath.replace(BASEPATH, "")[1:]))
+    outfilepath = os.path.join(updated_basename, "index.html")
     return outfilepath
 
 def check_if_img_dir(dirpath):
