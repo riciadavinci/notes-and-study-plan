@@ -153,12 +153,12 @@ for (i = 0; i < n; ++i)
 	- Word size (b): 4 bytes
 	- In-order issue & no superpipelining
 - Instructions:
-	```nasm
-	load R1, [R2] 		// store the address of A[i][k] in R2
-	             		// and then load location specified by R2 in R1
-	load R3, [R4]		// load B[k][j] location in R4 and then data in R4 to R3
-	madd R5, R1, R3		// multiply and add: C[i][k] += A[i][k] * B[k][J]
-	```
+```nasm
+load R1, [R2] 		// store the address of A[i][k] in R2
+					// and then load location specified by R2 in R1
+load R3, [R4]		// load B[k][j] location in R4 and then data in R4 to R3
+madd R5, R1, R3		// multiply and add: C[i][k] += A[i][k] * B[k][J]
+```
 - Taking a look at the performance of the above code:
 	- Both the `load` instructions will take `100 ns` each (so total of `200 ns`)
 	- A few nano seconds for `madd` (say `5 ns`)
