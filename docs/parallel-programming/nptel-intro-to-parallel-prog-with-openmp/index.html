@@ -104,7 +104,7 @@
 <p>But this requires multiple logical units (multiple hardware for each of the stages) - since you will be fetching more than 1 instruction at at time, decoding more than 1 instruction at a time, etc.</p>
 </li>
 <li>
-<p>What if 2 of these operations were not independent (ex: <code>ADD R1, 10</code> and <code>ADD R1, 5</code>), in theory these could still be parallelized (superpipelined) as follows: <img alt="Super-pipelining NOP Diagram" src="img/super_pipelining_nop.png" /></p>
+<p>What if 2 of these operations were not independent (ex: <code>ADD R1, 10</code> and <code>ADD R1, 5</code>), in theory these could still be parallelized (superpipelined) as follows: <img alt="Super-pipelining NOP Diagram" src="img/super_pipelining_NOP.png" /></p>
 </li>
 <li>
 <p>As we can see, the instruction fetch (<code>IF</code>), decode (<code>D</code>), and operand fetch (<code>OF</code>) can be done in parallel. But when <code>ADD R1, 10</code> is being executed, <code>ADD R1, 5</code> undergoes <code>NOP</code> (read as <strong>no-op</strong> or no operation instruction/cycle). Once <code>R1</code> is free, then <code>5</code> is added to <code>R1</code> in the next cycle.</p>

@@ -80,7 +80,7 @@ _<u>Note</u>: GPUs also adhere to shared memory architecture and programming mod
 
 - But this requires multiple logical units (multiple hardware for each of the stages) - since you will be fetching more than 1 instruction at at time, decoding more than 1 instruction at a time, etc.
 
-- What if 2 of these operations were not independent (ex: `ADD R1, 10` and `ADD R1, 5`), in theory these could still be parallelized (superpipelined) as follows: ![Super-pipelining NOP Diagram](img/super_pipelining_nop.png)
+- What if 2 of these operations were not independent (ex: `ADD R1, 10` and `ADD R1, 5`), in theory these could still be parallelized (superpipelined) as follows: ![Super-pipelining NOP Diagram](img/super_pipelining_NOP.png)
 
 - As we can see, the instruction fetch (`IF`), decode (`D`), and operand fetch (`OF`) can be done in parallel. But when `ADD R1, 10` is being executed, `ADD R1, 5` undergoes `NOP` (read as **no-op** or no operation instruction/cycle). Once `R1` is free, then `5` is added to `R1` in the next cycle.
 
