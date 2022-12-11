@@ -2,27 +2,27 @@
 <p><img alt="Alt text" src="img/MPI-model.png" /></p>
 <p><br></p>
 <h4>Sample 'Hello World' code:</h4>
-<p>```c++</p>
-<h1>include <cstdlib></h1>
-<h1>include <cstdio></h1>
-<h1>include <mpi.h></h1>
-<p>int main(int argc, char* argv[]) {
-    int rank, size;</p>
-<pre><code>// Initialize MPI processes
-MPI_Init(&amp;argc, &amp;argv);
+<pre><code class="language-c++">#include &lt;cstdlib&gt;
+#include &lt;cstdio&gt;
+#include &lt;mpi.h&gt;
 
-// Getting number of MPI processes
-MPI_comm_size(MPI_COMM_WORLD, &amp;size);
+int main(int argc, char* argv[]) {
+    int rank, size;
 
-// Getting rank of MPI process
-MPI_comm_rank(MPI_COMM_WORLD, &amp;rank);
+    // Initialize MPI processes
+    MPI_Init(&amp;argc, &amp;argv);
 
-printf("Hello, world from process: %d of %d! \n", rank, size);
+    // Getting number of MPI processes
+    MPI_comm_size(MPI_COMM_WORLD, &amp;size);
 
-// Close MPI processes
-MPI_Finalize();
+    // Getting rank of MPI process
+    MPI_comm_rank(MPI_COMM_WORLD, &amp;rank);
 
-return EXIT_SUCCESS;
+    printf(&quot;Hello, world from process: %d of %d! \n&quot;, rank, size);
+
+    // Close MPI processes
+    MPI_Finalize();
+
+    return EXIT_SUCCESS;
+}
 </code></pre>
-<p>}
-```</p>

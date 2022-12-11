@@ -22,11 +22,32 @@
 </ul>
 <p><br></p>
 <h3>1.2 Parallel Architectures &amp; Programming Models:</h3>
-<p>| Memory Models | Parallel Architectures | Programming Models |
-| --- | --- | --- |
-| <strong>Shared Memory</strong> <br><br> (Popular framework - <strong>OpenMP</strong>) | A single <strong>memory</strong> unit is <strong>shared by all processors</strong> (i.e. all processors have access to this shared memory). Typically a common <strong>BUS sits</strong> between the memory and the processing units. An <strong>Arbiter</strong>[^1] figures out which CPU gets access to the memory.<br> Shared memory systems have a limit on number of processors/cores that can access the same memory via the BUS. Thus, here the BUS becomes the bottleneck. | This assumes that there is a huge <strong>global address space</strong> (in the memory) that is accessible/visible to all the tasks. It is known as <strong>Shared Memory Programming Model</strong>. |
-| <strong>Distributed Memory</strong> <br><br> (Popular framework - <strong>MPI</strong>) | Every CPU has its <strong>own memory unit</strong>. Thus, a CPU and its own memory form a node. They need to be synced up when solving a divided problem. They talk to each other via a Network.<br> The problem of upper limit of number of CPUs/Cores is solved in that the number is bounded by the number of nodes. The bottleneck shifts to the network. | Here we have <strong>Message Passing Programming Model</strong>, where each task has its own address space (private). If one task wants to get data from another task, it has to explicitly do message passing over the network. Two important keywords associated with this type of programming model are <strong>send</strong> and <strong>receive (recv)</strong>. |
-| <strong>Hybrid</strong> <br><br> (Popular framework combo - <strong>OpenMP</strong> + <strong>MPI</strong>) | In reality, the hybrid approach is generally favoured. It has several nodes, and each node has multiple CPUs. It could also be a CPU and a GPU. | A combination of message passing and shared memory is used. Typically you have different processes running on different nodes of the distributed memory architecture and within each node we use shared memory model for multiple cores. |</p>
+<table>
+<thead>
+<tr>
+<th>Memory Models</th>
+<th>Parallel Architectures</th>
+<th>Programming Models</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shared Memory</strong> <br><br> (Popular framework - <strong>OpenMP</strong>)</td>
+<td>A single <strong>memory</strong> unit is <strong>shared by all processors</strong> (i.e. all processors have access to this shared memory). Typically a common <strong>BUS sits</strong> between the memory and the processing units. An <strong>Arbiter</strong>[^1] figures out which CPU gets access to the memory.<br> Shared memory systems have a limit on number of processors/cores that can access the same memory via the BUS. Thus, here the BUS becomes the bottleneck.</td>
+<td>This assumes that there is a huge <strong>global address space</strong> (in the memory) that is accessible/visible to all the tasks. It is known as <strong>Shared Memory Programming Model</strong>.</td>
+</tr>
+<tr>
+<td><strong>Distributed Memory</strong> <br><br> (Popular framework - <strong>MPI</strong>)</td>
+<td>Every CPU has its <strong>own memory unit</strong>. Thus, a CPU and its own memory form a node. They need to be synced up when solving a divided problem. They talk to each other via a Network.<br> The problem of upper limit of number of CPUs/Cores is solved in that the number is bounded by the number of nodes. The bottleneck shifts to the network.</td>
+<td>Here we have <strong>Message Passing Programming Model</strong>, where each task has its own address space (private). If one task wants to get data from another task, it has to explicitly do message passing over the network. Two important keywords associated with this type of programming model are <strong>send</strong> and <strong>receive (recv)</strong>.</td>
+</tr>
+<tr>
+<td><strong>Hybrid</strong> <br><br> (Popular framework combo - <strong>OpenMP</strong> + <strong>MPI</strong>)</td>
+<td>In reality, the hybrid approach is generally favoured. It has several nodes, and each node has multiple CPUs. It could also be a CPU and a GPU.</td>
+<td>A combination of message passing and shared memory is used. Typically you have different processes running on different nodes of the distributed memory architecture and within each node we use shared memory model for multiple cores.</td>
+</tr>
+</tbody>
+</table>
 <p><em><u>Note</u>: It is possible to have a shared memory architecture that works on top of message passing programming model and also to have a message passing architecture that works on top of shared memory programming model. <br> Take the case of message passing build on top shared memory architecture - a process has its own address space and other process cannot see this address space unless you do explicit message calls. <br> Similarly, you can do a shared memory programming with distributed memory architecture - The distributed memory will have an image of a global memory (snapshot of all distributed memories combined), but accessing data from a local process becomes the responsibility of the OS (since the memory sharing has to be implicit by default). The programmer does not need to worry about this explicitly, although data fetching rates will vary greatly.</em></p>
 <p><em><u>Note</u>: GPUs also adhere to shared memory architecture and programming model. many GPUs at many nodes can be combined via message passing to get a even greater performance. Nvidia GPUs use CUDA framework (built on top of C &amp; C++).</em></p>
 <p><br></p>
@@ -118,13 +139,36 @@ Thus, <code>ADD R1, 3</code> will have to wait for <code>ADD R1, @1000</code> to
 <ul>
 <li>Another way to deal with this issue of execution is to use VLIW. Instead of using the processor to determine whether the commands can be executed as a set of parallel instructions at runtime (this requires complex hardware and also the previous problems), the work can be offloaded to the compiler. Thus, while compilation of your code, the compiler decides in advance which instuctions are to be executed in parallel and then clubs them together. This is the idea behind the VLIW architecture.</li>
 </ul>
-<p>| Superpipelining | VLIW |
-| --- | --- |
-| This is done dynamically (at runtime). | This is done statically (at compile time). |
-| This needs complex hardware. | The hardware circuit can be much simpler. |
-| Since this is done in realtime, the proessor has a very small window to decide on which instructions to club together in parallel and hence it cannot get the most parallel performance. | It is done offline (at compile time), thus the processor has enough time to try out large number of permutations and combinations to get optimal parallelized code. This may take a large compile time, but it pays off with faster exeution. | 
-| Superpipelining can take advantage of dynamic state and make decisions about order of execution better than VLIW. | The major drawback is that it does not have a view of the dynamic state - what is currently going on. Eg. if an operand fetch takes long time, VLIW cannot choose another independent instruction to execute in parallel to avoid wasting time. |
-| In case of branching (like loops), the superpipeline has access to branch history table and if it predicts that an instruction is going to be executed n number of times through the loop, it will just fetch the instruction from this branch history table. | Again, the VLIW cannot take advantage of dynamic state features like branch history table, and hence it will fetch the instructions again from the memory instead of from the cached table, thus wasting precious time. |</p>
+<table>
+<thead>
+<tr>
+<th>Superpipelining</th>
+<th>VLIW</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>This is done dynamically (at runtime).</td>
+<td>This is done statically (at compile time).</td>
+</tr>
+<tr>
+<td>This needs complex hardware.</td>
+<td>The hardware circuit can be much simpler.</td>
+</tr>
+<tr>
+<td>Since this is done in realtime, the proessor has a very small window to decide on which instructions to club together in parallel and hence it cannot get the most parallel performance.</td>
+<td>It is done offline (at compile time), thus the processor has enough time to try out large number of permutations and combinations to get optimal parallelized code. This may take a large compile time, but it pays off with faster exeution.</td>
+</tr>
+<tr>
+<td>Superpipelining can take advantage of dynamic state and make decisions about order of execution better than VLIW.</td>
+<td>The major drawback is that it does not have a view of the dynamic state - what is currently going on. Eg. if an operand fetch takes long time, VLIW cannot choose another independent instruction to execute in parallel to avoid wasting time.</td>
+</tr>
+<tr>
+<td>In case of branching (like loops), the superpipeline has access to branch history table and if it predicts that an instruction is going to be executed n number of times through the loop, it will just fetch the instruction from this branch history table.</td>
+<td>Again, the VLIW cannot take advantage of dynamic state features like branch history table, and hence it will fetch the instructions again from the memory instead of from the cached table, thus wasting precious time.</td>
+</tr>
+</tbody>
+</table>
 <p><br></p>
 <h3>1.5 Memory Latency</h3>
 <ul>
