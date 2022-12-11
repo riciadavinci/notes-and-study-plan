@@ -88,15 +88,16 @@
 <li>In this way, we don't have to wait 3 cycles for <code>ADD R1, 10</code> to finish completely (total time here would be 6 cyucles). We can utilize the idle hardware to optimize resource utilization and speed up our code</li>
 </ul>
 </li>
-<li><strong>Separate hardware</strong> is required for each stage of the instruction while pipelining
-<img alt="Pipelining Diagram" src="img/pipelining.png" /></li>
+<li><strong>Separate hardware</strong> is required for each stage of the instruction while pipelining</li>
 </ul>
+<p><img alt="Pipelining Diagram" src="img/pipelining.png" /></p>
 <p><br></p>
 <h3>1.4 Superpipelining and VLIW</h3>
 <ul>
-<li>
-<p>For example, let's say that we want to perform the following 3 operations/commands: <code>ADD R1, 10</code>, <code>ADD R2, 5</code>,  and <code>SUB R3, 6</code>. If the processor figures out that these instructions are independent of each other, then it  can execute them in parallel as follows: <img alt="Super-pipelining Diagram" src="img/super_pipelining.png" /></p>
-</li>
+<li>For example, let's say that we want to perform the following 3 operations/commands: <code>ADD R1, 10</code>, <code>ADD R2, 5</code>,  and <code>SUB R3, 6</code>. If the processor figures out that these instructions are independent of each other, then it  can execute them in parallel as follows: </li>
+</ul>
+<p><img alt="Super-pipelining Diagram" src="img/super_pipelining.png" /></p>
+<ul>
 <li>
 <p>This is called <strong>Superpipelining</strong>.</p>
 </li>
@@ -104,8 +105,11 @@
 <p>But this requires multiple logical units (multiple hardware for each of the stages) - since you will be fetching more than 1 instruction at at time, decoding more than 1 instruction at a time, etc.</p>
 </li>
 <li>
-<p>What if 2 of these operations were not independent (ex: <code>ADD R1, 10</code> and <code>ADD R1, 5</code>), in theory these could still be parallelized (superpipelined) as follows: <img alt="Super-pipelining NOP Diagram" src="img/super_pipelining_NOP.png" /></p>
+<p>What if 2 of these operations were not independent (ex: <code>ADD R1, 10</code> and <code>ADD R1, 5</code>), in theory these could still be parallelized (superpipelined) as follows: </p>
 </li>
+</ul>
+<p><img alt="Super-pipelining NOP Diagram" src="img/super_pipelining_NOP.png" /></p>
+<ul>
 <li>
 <p>As we can see, the instruction fetch (<code>IF</code>), decode (<code>D</code>), and operand fetch (<code>OF</code>) can be done in parallel. But when <code>ADD R1, 10</code> is being executed, <code>ADD R1, 5</code> undergoes <code>NOP</code> (read as <strong>no-op</strong> or no operation instruction/cycle). Once <code>R1</code> is free, then <code>5</code> is added to <code>R1</code> in the next cycle.</p>
 </li>
@@ -120,13 +124,16 @@
 <p><strong>Data Dependency:</strong> <code>ADD R1, 10</code> and <code>ADD R1, 5</code> are not data independent operations and hence it is not possible to make them 100% Superpipelined. A <code>NOP</code> cycle is necessary.</p>
 </li>
 <li>
-<p><strong>Branching:</strong> Let's say that we put in 2 instructions at a time in parallel (in a superpipeline). From the diagram below, let's say one of the instructions (marked in red) has conditional branching. Until decoding of this instruction, instructions are let in two at a time in the superpipeline (instructions in blue and green). Once that <em>branching</em> instruction is decoded, we get to know that we have to jump to some other the code. Thus, the insturctions already loaded into the pipeline (blue and green) have to be scrapped. This leads to wasted work. <img alt="Super-pipelining NOP Diagram" src="img/branching.png" /></p>
-</li>
-<li>
-<p><strong>Memory Latency:</strong> This issue goes beyond pipelining (it's a general issue). Modern processors operate at 2-4GHz. In comparison, fetching from memory (RAM) takes hundreds of cycles, while the instrution can be executed in about 4-5 cycles (4-5 ns). Thus, there is a huge gap between the performance of the processor and the time it takes to get data from the memory. Ex: let's say that we want to add some data located in main memory (say at address <code>@1000</code>) to a register (say <code>R1</code>) - <code>ADD R1, @1000</code>. The 2nd instruction is to add a constant to <code>R1</code> - <code>ADD R1, 3</code>. As seen from the figure: <img alt="Memory latency issue" src="img/memory_latency_issue.png" />
-Thus, <code>ADD R1, 3</code> will have to wait for <code>ADD R1, @1000</code> to finish operand fetch (from main memory) and execution, before it can resume. Thus, it is a waste of pipelining.</p>
+<p><strong>Branching:</strong> Let's say that we put in 2 instructions at a time in parallel (in a superpipeline). From the diagram below, let's say one of the instructions (marked in red) has conditional branching. Until decoding of this instruction, instructions are let in two at a time in the superpipeline (instructions in blue and green). Once that <em>branching</em> instruction is decoded, we get to know that we have to jump to some other the code. Thus, the insturctions already loaded into the pipeline (blue and green) have to be scrapped. This leads to wasted work. </p>
 </li>
 </ol>
+<p><img alt="Super-pipelining NOP Diagram" src="img/branching.png" /></p>
+<ol>
+<li><strong>Memory Latency:</strong> This issue goes beyond pipelining (it's a general issue). Modern processors operate at 2-4GHz. In comparison, fetching from memory (RAM) takes hundreds of cycles, while the instrution can be executed in about 4-5 cycles (4-5 ns). Thus, there is a huge gap between the performance of the processor and the time it takes to get data from the memory. Ex: let's say that we want to add some data located in main memory (say at address <code>@1000</code>) to a register (say <code>R1</code>) - <code>ADD R1, @1000</code>. The 2nd instruction is to add a constant to <code>R1</code> - <code>ADD R1, 3</code>. As seen from the figure: </li>
+</ol>
+<p><img alt="Memory latency issue" src="img/memory_latency_issue.png" />
+<br></p>
+<p>Thus, <code>ADD R1, 3</code> will have to wait for <code>ADD R1, @1000</code> to finish operand fetch (from main memory) and execution, before it can resume. Thus, it is a waste of pipelining.</p>
 <h4>1.4.2 In-order execution:</h4>
 <ul>
 <li>In inorder execution, the processor simply picks up the next instruction (from the code) and puts it into the pipeline for execution. While issuing it checks whether the instruction can be issued simultaneously or not. </li>
@@ -176,13 +183,15 @@ Thus, <code>ADD R1, 3</code> will have to wait for <code>ADD R1, @1000</code> to
 <li>One important factor that determines the performance of the memory is <strong>latency</strong> - it is the time taken from requesting data (<code>OF</code>) from a particular memory location and receiving that data. It is denoted by <code>l</code>.</li>
 <li>The performance of a computer system depends on its ability to feed data to the processor.</li>
 <li>Consider an example of matrix multiplication: <code>C = A x B</code>. Each matrix is of the size <code>64 x 64</code> and each element has size <code>4 bytes</code>.
-The simplest code would be:
-    <code>C++
-    // Initialize C to zero
-    for (i = 0; i &lt; n; ++i)
-      for (j = 0; j &lt; n; ++j)
-        for (k = 0; k &lt; n; ++k)
-          C[i][j] += A[i][k] * B[k][j];</code></li>
+The simplest code would be:</li>
+</ul>
+<pre><code class="language-C++">// Initialize C to zero
+for (i = 0; i &lt; n; ++i)
+    for (j = 0; j &lt; n; ++j)
+    for (k = 0; k &lt; n; ++k)
+        C[i][j] += A[i][k] * B[k][j];
+</code></pre>
+<ul>
 <li>Assuming a few things:<ul>
 <li>Processor clock speed: 1 GHz</li>
 <li>Cost of memory access: 100cycles / 100 ns</li>

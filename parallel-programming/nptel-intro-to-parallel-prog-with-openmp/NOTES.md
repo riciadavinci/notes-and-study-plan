@@ -68,19 +68,24 @@ _<u>Note</u>: GPUs also adhere to shared memory architecture and programming mod
 		- And in the 4th cycle, `ADD R2, 5` will be executed.
 	- In this way, we don't have to wait 3 cycles for `ADD R1, 10` to finish completely (total time here would be 6 cyucles). We can utilize the idle hardware to optimize resource utilization and speed up our code
 - **Separate hardware** is required for each stage of the instruction while pipelining
+
 ![Pipelining Diagram](img/pipelining.png)
 
 <br>
 
 ### 1.4 Superpipelining and VLIW
 
-- For example, let's say that we want to perform the following 3 operations/commands: `ADD R1, 10`, `ADD R2, 5`,  and `SUB R3, 6`. If the processor figures out that these instructions are independent of each other, then it  can execute them in parallel as follows: ![Super-pipelining Diagram](img/super_pipelining.png)
+- For example, let's say that we want to perform the following 3 operations/commands: `ADD R1, 10`, `ADD R2, 5`,  and `SUB R3, 6`. If the processor figures out that these instructions are independent of each other, then it  can execute them in parallel as follows: 
+
+![Super-pipelining Diagram](img/super_pipelining.png)
 
 - This is called **Superpipelining**.
 
 - But this requires multiple logical units (multiple hardware for each of the stages) - since you will be fetching more than 1 instruction at at time, decoding more than 1 instruction at a time, etc.
 
-- What if 2 of these operations were not independent (ex: `ADD R1, 10` and `ADD R1, 5`), in theory these could still be parallelized (superpipelined) as follows: ![Super-pipelining NOP Diagram](img/super_pipelining_NOP.png)
+- What if 2 of these operations were not independent (ex: `ADD R1, 10` and `ADD R1, 5`), in theory these could still be parallelized (superpipelined) as follows: 
+
+![Super-pipelining NOP Diagram](img/super_pipelining_NOP.png)
 
 - As we can see, the instruction fetch (`IF`), decode (`D`), and operand fetch (`OF`) can be done in parallel. But when `ADD R1, 10` is being executed, `ADD R1, 5` undergoes `NOP` (read as **no-op** or no operation instruction/cycle). Once `R1` is free, then `5` is added to `R1` in the next cycle.
 
@@ -92,9 +97,15 @@ _<u>Note</u>: GPUs also adhere to shared memory architecture and programming mod
 
 1. **Data Dependency:** `ADD R1, 10` and `ADD R1, 5` are not data independent operations and hence it is not possible to make them 100% Superpipelined. A `NOP` cycle is necessary.
 
-2. **Branching:** Let's say that we put in 2 instructions at a time in parallel (in a superpipeline). From the diagram below, let's say one of the instructions (marked in red) has conditional branching. Until decoding of this instruction, instructions are let in two at a time in the superpipeline (instructions in blue and green). Once that _branching_ instruction is decoded, we get to know that we have to jump to some other the code. Thus, the insturctions already loaded into the pipeline (blue and green) have to be scrapped. This leads to wasted work. ![Super-pipelining NOP Diagram](img/branching.png)
+2. **Branching:** Let's say that we put in 2 instructions at a time in parallel (in a superpipeline). From the diagram below, let's say one of the instructions (marked in red) has conditional branching. Until decoding of this instruction, instructions are let in two at a time in the superpipeline (instructions in blue and green). Once that _branching_ instruction is decoded, we get to know that we have to jump to some other the code. Thus, the insturctions already loaded into the pipeline (blue and green) have to be scrapped. This leads to wasted work. 
 
-3. **Memory Latency:** This issue goes beyond pipelining (it's a general issue). Modern processors operate at 2-4GHz. In comparison, fetching from memory (RAM) takes hundreds of cycles, while the instrution can be executed in about 4-5 cycles (4-5 ns). Thus, there is a huge gap between the performance of the processor and the time it takes to get data from the memory. Ex: let's say that we want to add some data located in main memory (say at address `@1000`) to a register (say `R1`) - `ADD R1, @1000`. The 2nd instruction is to add a constant to `R1` - `ADD R1, 3`. As seen from the figure: ![Memory latency issue](img/memory_latency_issue.png)
+![Super-pipelining NOP Diagram](img/branching.png)
+
+3. **Memory Latency:** This issue goes beyond pipelining (it's a general issue). Modern processors operate at 2-4GHz. In comparison, fetching from memory (RAM) takes hundreds of cycles, while the instrution can be executed in about 4-5 cycles (4-5 ns). Thus, there is a huge gap between the performance of the processor and the time it takes to get data from the memory. Ex: let's say that we want to add some data located in main memory (say at address `@1000`) to a register (say `R1`) - `ADD R1, @1000`. The 2nd instruction is to add a constant to `R1` - `ADD R1, 3`. As seen from the figure: 
+
+![Memory latency issue](img/memory_latency_issue.png)
+<br>
+
 Thus, `ADD R1, 3` will have to wait for `ADD R1, @1000` to finish operand fetch (from main memory) and execution, before it can resume. Thus, it is a waste of pipelining.
 
 
@@ -129,13 +140,13 @@ Thus, `ADD R1, 3` will have to wait for `ADD R1, @1000` to finish operand fetch 
 - The performance of a computer system depends on its ability to feed data to the processor.
 - Consider an example of matrix multiplication: `C = A x B`. Each matrix is of the size `64 x 64` and each element has size `4 bytes`.
 The simplest code would be:
-	```C++
-	// Initialize C to zero
-	for (i = 0; i < n; ++i)
-	  for (j = 0; j < n; ++j)
-	    for (k = 0; k < n; ++k)
-		  C[i][j] += A[i][k] * B[k][j];
-	```
+```C++
+// Initialize C to zero
+for (i = 0; i < n; ++i)
+	for (j = 0; j < n; ++j)
+	for (k = 0; k < n; ++k)
+		C[i][j] += A[i][k] * B[k][j];
+```
 - Assuming a few things:
 	- Processor clock speed: 1 GHz
 	- Cost of memory access: 100cycles / 100 ns
