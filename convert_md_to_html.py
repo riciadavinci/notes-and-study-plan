@@ -64,7 +64,7 @@ def convert_to_md(in_filepath, out_filepath):
     os.makedirs(os.path.dirname(out_filepath), exist_ok=True)
     with open(in_filepath, "r") as ifp, open(out_filepath, "w") as ofp:
         md_text = ifp.read()
-        html_text = markdown.markdown(md_text)
+        html_text = markdown.markdown(md_text, extensions=['fenced_code', 'tables'])
         ofp.write(html_text)
         print("Created: {}".format(out_filepath))
 
